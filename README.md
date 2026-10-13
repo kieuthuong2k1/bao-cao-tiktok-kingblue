@@ -7,10 +7,14 @@
   <img src="https://img.shields.io/badge/Total%20Videos-68%20Videos-007ACC?style=for-the-badge" alt="Total Videos" />
   <img src="https://img.shields.io/badge/Total%20Views-173%2C762-28A745?style=for-the-badge" alt="Total Views" />
   <img src="https://img.shields.io/badge/Total%20Engagements-2%2C081-FF9900?style=for-the-badge" alt="Total Engagements" />
-  <img src="https://img.shields.io/badge/Status-Verified%20Data-brightgreen?style=for-the-badge" alt="Status" />
+  <img src="https://img.shields.io/badge/Live%20Dashboard-Active-success?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Live Dashboard" />
 </p>
 
+> 🌐 **TRUY CẬP WEBSITE DASHBOARD TRỰC TIẾP:** [https://kieuthuong2k1.github.io/bao-cao-tiktok-kingblue/](https://kieuthuong2k1.github.io/bao-cao-tiktok-kingblue/)  
+> *(Giao diện tương tác, lọc theo tháng, tìm kiếm video và biểu đồ động)*
+
 ---
+
 
 ## 📑 MỤC LỤC BÁO CÁO
 
