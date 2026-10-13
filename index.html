@@ -3,107 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Báo Cáo Hiệu Quả TikTok Q3/2026 - King Blue</title>
-  <meta name="description" content="Dashboard phân tích số liệu và báo cáo hiệu quả nội dung TikTok Quý 3/2026 của thương hiệu King Blue / CKO.">
+  <title>KING BLUE - Báo Cáo Hiệu Suất KOL Affiliate & Doanh Thu Đa Kênh 2026</title>
+  <meta name="description" content="Báo cáo tổng hợp doanh thu từng KOL theo từng tháng, số lượng video, tỷ lệ ra đơn, top sản phẩm bán chạy trên TikTok Shop và Shopee Affiliate cho thương hiệu King Blue.">
+  
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- External Data File -->
+  <script src="dashboard_data.js"></script>
+
   <style>
     :root {
-      --bg-main: #0a0f1d;
-      --bg-card: rgba(16, 24, 46, 0.85);
-      --bg-card-hover: rgba(22, 34, 66, 0.95);
-      --border-color: rgba(43, 76, 126, 0.35);
-      --border-glow: rgba(0, 168, 255, 0.4);
-      --primary: #0088ff;
-      --primary-glow: #00d2ff;
-      --accent-orange: #ff6b00;
-      --accent-green: #00e676;
-      --accent-purple: #9d4edd;
-      --text-main: #f0f4fc;
-      --text-muted: #8ea1c1;
-      --text-sub: #5c7299;
+      --bg-primary: #0a0e17;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(31, 41, 55, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(59, 130, 246, 0.25);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --primary: #3b82f6;
+      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --accent-rose: #f43f5e;
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --bg-card-hover: rgba(241, 245, 249, 0.95);
+      --border-color: rgba(226, 232, 240, 0.8);
+      --border-glow: rgba(59, 130, 246, 0.15);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--bg-main);
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(0, 136, 255, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 65%, rgba(157, 78, 221, 0.08) 0%, transparent 40%);
+      background-color: var(--bg-primary);
       color: var(--text-main);
       min-height: 100vh;
-      line-height: 1.6;
       overflow-x: hidden;
+      line-height: 1.5;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
 
     /* Container */
-    .dashboard-container {
+    .container {
       max-width: 1440px;
       margin: 0 auto;
-      padding: 24px 20px 60px;
+      padding: 24px 20px;
     }
 
     /* Header */
-    header.dash-header {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 20px 28px;
+      padding: 16px 24px;
       background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-      margin-bottom: 28px;
+      box-shadow: var(--glass-shadow);
+      margin-bottom: 24px;
+      position: sticky;
+      top: 16px;
+      z-index: 100;
     }
 
-    .brand-block {
+    .brand-section {
       display: flex;
       align-items: center;
       gap: 16px;
     }
 
-    .brand-logo-badge {
-      width: 52px;
-      height: 52px;
-      background: linear-gradient(135deg, #0055ff, #00d2ff);
+    .logo-badge {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 20px;
-      color: #fff;
-      box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
-    }
-
-    .brand-title h1 {
       font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #ffffff, #a5cfff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
     }
 
-    .brand-title p {
+    .brand-info h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-info h1 span.pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .brand-info p {
       font-size: 13px;
       color: var(--text-muted);
-      font-weight: 500;
     }
 
     .header-actions {
@@ -112,871 +168,1767 @@
       gap: 12px;
     }
 
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 600;
-      background: rgba(0, 230, 118, 0.12);
-      color: var(--accent-green);
-      border: 1px solid rgba(0, 230, 118, 0.3);
-    }
-
-    .btn-github {
+    .btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 18px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 30px;
-      color: #fff;
-      text-decoration: none;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
       font-size: 13px;
       font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary-gradient);
+      border: none;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      cursor: pointer;
       transition: var(--transition);
     }
 
-    .btn-github:hover {
-      background: rgba(255, 255, 255, 0.16);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    .theme-toggle:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Tabs Navigation */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      padding: 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 160px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
     }
 
     /* KPI Grid */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 18px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .kpi-card {
       background: var(--bg-card);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 22px 20px;
+      padding: 20px;
+      box-shadow: var(--glass-shadow);
       position: relative;
       overflow: hidden;
       transition: var(--transition);
-      backdrop-filter: blur(12px);
     }
 
     .kpi-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-3px);
       border-color: var(--border-glow);
-      box-shadow: 0 10px 24px rgba(0, 136, 255, 0.18);
+      background: var(--bg-card-hover);
     }
 
-    .kpi-card::after {
+    .kpi-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--primary);
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--primary));
     }
 
-    .kpi-card.orange::after { background: var(--accent-orange); }
-    .kpi-card.green::after { background: var(--accent-green); }
-    .kpi-card.purple::after { background: var(--accent-purple); }
-
-    .kpi-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
+    .kpi-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .kpi-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .kpi-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--card-accent, var(--primary));
     }
 
     .kpi-value {
-      font-size: 32px;
+      font-size: 26px;
       font-weight: 800;
-      letter-spacing: -1px;
-      color: #ffffff;
-      line-height: 1.1;
-      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .kpi-trend {
+    .kpi-subtext {
       font-size: 12px;
-      font-weight: 600;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
 
-    .trend-up { color: var(--accent-green); }
-    .trend-neutral { color: var(--text-sub); }
-
-    /* Section Headers */
-    .section-title {
-      font-size: 18px;
+    .trend-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       font-weight: 700;
-      margin-bottom: 16px;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .trend-up {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+    }
+
+    .trend-down {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--accent-rose);
+    }
+
+    /* Chart Section */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--glass-shadow);
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .section-title::before {
-      content: '';
-      display: inline-block;
-      width: 4px;
-      height: 18px;
-      background: var(--primary);
-      border-radius: 2px;
-    }
-
-    /* Charts Section */
-    .charts-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-
-    @media (max-width: 992px) {
-      .charts-row { grid-template-columns: 1fr; }
-    }
-
-    .chart-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 22px 24px;
-      backdrop-filter: blur(12px);
-    }
-
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
-    .chart-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .chart-subtitle {
-      font-size: 12px;
+    .card-subtitle {
+      font-size: 13px;
       color: var(--text-muted);
+      margin-top: 2px;
     }
 
-    .chart-wrapper {
+    .chart-container {
       position: relative;
-      height: 280px;
+      height: 320px;
       width: 100%;
     }
 
-    /* Top Videos Showcase */
-    .top-videos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
-      margin-bottom: 32px;
+    /* Filters & Search */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
-    .top-video-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-      transition: var(--transition);
+    .search-box {
+      flex: 1;
+      min-width: 240px;
       position: relative;
     }
 
-    .top-video-card:hover {
-      border-color: var(--border-glow);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 22px rgba(0,0,0,0.3);
+    .search-box i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 14px;
     }
 
-    .top-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-    }
-
-    .rank-1 { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.4); }
-    .rank-2 { background: rgba(224, 224, 224, 0.2); color: #e0e0e0; border: 1px solid rgba(224, 224, 224, 0.4); }
-    .rank-3 { background: rgba(205, 127, 50, 0.2); color: #cd7f32; border: 1px solid rgba(205, 127, 50, 0.4); }
-    .rank-other { background: rgba(0, 136, 255, 0.15); color: #70b8ff; }
-
-    .video-name {
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 6px;
-      line-height: 1.4;
-    }
-
-    .video-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-
-    .video-stats {
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding-top: 12px;
-      font-size: 13px;
-    }
-
-    .video-stat-item {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .video-stat-num {
-      font-weight: 700;
+    .search-box input {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
       color: var(--text-main);
-    }
-
-    .video-stat-sub {
-      font-size: 11px;
-      color: var(--text-sub);
-    }
-
-    /* Filters Bar */
-    .filters-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 18px;
-      padding: 16px 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-    }
-
-    .filter-tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .filter-btn {
-      padding: 7px 16px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      color: var(--text-muted);
       font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .filter-btn:hover {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-    }
-
-    .filter-btn.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary-glow);
-      box-shadow: 0 0 12px rgba(0, 136, 255, 0.4);
-    }
-
-    .search-input {
-      padding: 8px 16px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      color: #fff;
-      font-size: 13px;
-      min-width: 240px;
       outline: none;
       transition: var(--transition);
     }
 
-    .search-input:focus {
+    .search-box input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 10px rgba(0, 136, 255, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
 
-    /* Table Container */
-    .table-panel {
-      background: var(--bg-card);
+    .filter-select {
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-      margin-bottom: 36px;
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+      transition: var(--transition);
     }
 
+    .filter-select:focus {
+      border-color: var(--primary);
+    }
+
+    /* Data Table */
     .table-responsive {
       overflow-x: auto;
-      max-height: 520px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
     }
 
-    table.data-table {
+    table {
       width: 100%;
       border-collapse: collapse;
-      text-align: left;
       font-size: 13px;
+      text-align: left;
     }
 
-    table.data-table th {
-      background: rgba(10, 18, 38, 0.95);
-      padding: 14px 18px;
+    th {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px 16px;
       font-weight: 700;
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 0.8px;
       color: var(--text-muted);
       border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      white-space: nowrap;
+      user-select: none;
+      cursor: pointer;
+      transition: var(--transition);
     }
 
-    table.data-table td {
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    th:hover {
       color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
     }
 
-    table.data-table tr:hover td {
-      background: rgba(0, 136, 255, 0.05);
+    th i {
+      margin-left: 4px;
+      font-size: 11px;
     }
 
-    .badge-category {
-      display: inline-block;
-      padding: 3px 8px;
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .kol-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .kol-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .kol-names h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .kol-names p {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge-rank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
       border-radius: 6px;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    .rank-1 { background: #fef08a; color: #854d0e; }
+    .rank-2 { background: #e2e8f0; color: #475569; }
+    .rank-3 { background: #fed7aa; color: #9a3412; }
+    .rank-other { background: rgba(255, 255, 255, 0.05); color: var(--text-dim); }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
       font-size: 11px;
       font-weight: 600;
     }
 
-    .badge-cat-sp { background: rgba(0, 136, 255, 0.15); color: #70b8ff; }
-    .badge-cat-koc { background: rgba(157, 78, 221, 0.2); color: #d094ff; font-weight: 700; }
-    .badge-cat-review { background: rgba(255, 107, 0, 0.15); color: #ff9b50; }
-    .badge-cat-hdsd { background: rgba(0, 230, 118, 0.15); color: #69f0ae; }
-    .badge-cat-banner { background: rgba(108, 117, 125, 0.2); color: #b0bec5; }
+    .tag-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .tag-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .tag-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .tag-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
 
-    /* Action Plan Cards */
-    .plan-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 18px;
+    .numeric {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
     }
 
-    .plan-card {
+    /* Product Cards Matrix */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      position: relative;
     }
 
-    .plan-target {
-      font-size: 26px;
+    .product-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .product-title {
+      font-size: 16px;
       font-weight: 800;
-      color: var(--primary-glow);
-      margin-bottom: 4px;
+      margin-bottom: 8px;
+      padding-right: 70px;
+      line-height: 1.4;
+    }
+
+    .product-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .product-kols {
+      margin-top: auto;
+      border-top: 1px solid var(--border-color);
+      padding-top: 12px;
+    }
+
+    .product-kols h5 {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .kol-tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .kol-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-main);
+    }
+
+    /* Modal Drawer */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      padding: 28px;
+      position: relative;
+      animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      color: #fff;
+      background: var(--accent-rose);
+      border-color: var(--accent-rose);
+    }
+
+    /* Tab Contents */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Report Article */
+    .report-content {
+      line-height: 1.7;
+      font-size: 14.5px;
+      color: var(--text-main);
+    }
+
+    .report-content h2 {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 28px 0 14px;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .report-content h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 20px 0 10px;
+      color: var(--accent-cyan);
+    }
+
+    .report-content p {
+      margin-bottom: 14px;
+      color: var(--text-muted);
+    }
+
+    .report-content ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+      color: var(--text-muted);
+    }
+
+    .report-content li {
+      margin-bottom: 6px;
+    }
+
+    .report-highlight {
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 4px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 18px 0;
     }
 
     /* Footer */
-    footer.dash-footer {
+    footer {
       text-align: center;
-      padding-top: 30px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 30px 20px;
+      color: var(--text-dim);
       font-size: 13px;
-      color: var(--text-sub);
+      border-top: 1px solid var(--border-color);
+      margin-top: 40px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pagination-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .page-btn {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .page-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
     }
   </style>
 </head>
 <body>
 
-  <div class="dashboard-container">
+  <div class="container">
     <!-- Header -->
-    <header class="dash-header">
-      <div class="brand-block">
-        <div class="brand-logo-badge">KB</div>
-        <div class="brand-title">
-          <h1>KING BLUE • TIKTOK INTELLIGENCE DASHBOARD</h1>
-          <p>Báo Cáo Tổng Hợp & Phân Tích Hiệu Quả Nội Dung Quý 3/2026 (Tháng 7 – 9)</p>
+    <header>
+      <div class="brand-section">
+        <div class="logo-badge">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div class="brand-info">
+          <h1>KING BLUE <span class="pill"><i class="fa-solid fa-circle-check"></i> Official Report</span></h1>
+          <p>Báo Cáo Hiệu Suất KOL / KOC Affiliate & Doanh Thu Đa Kênh T1 - T9 / 2026</p>
         </div>
       </div>
       <div class="header-actions">
-        <span class="badge-pill">● Dữ Liệu Thời Gian Thực</span>
-        <a href="https://github.com/kieuthuong2k1/bao-cao-tiktok-kingblue" target="_blank" class="btn-github">
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          GitHub Repository
-        </a>
+        <button class="btn" onclick="exportDataToCSV()"><i class="fa-solid fa-file-export"></i> Xuất Dữ Liệu</button>
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Đổi giao diện sáng/tối">
+          <i class="fa-solid fa-moon"></i>
+        </button>
       </div>
     </header>
 
-    <!-- KPI Metric Cards -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-label">Tổng Lượt Xem (Views) <span>👁️</span></div>
-        <div class="kpi-value" id="kpi-views">173,762</div>
-        <div class="kpi-trend trend-up">▲ +26.3% tăng trưởng tháng 9</div>
-      </div>
-      <div class="kpi-card orange">
-        <div class="kpi-label">Tổng Video Xuất Bản <span>🎬</span></div>
-        <div class="kpi-value" id="kpi-videos">68</div>
-        <div class="kpi-trend trend-neutral">~5.2 video / tuần</div>
-      </div>
-      <div class="kpi-card green">
-        <div class="kpi-label">Tổng Tương Tác <span>💬</span></div>
-        <div class="kpi-value" id="kpi-engagements">2,081</div>
-        <div class="kpi-trend trend-up">▲ 2,019 Likes • 62 Comments</div>
-      </div>
-      <div class="kpi-card purple">
-        <div class="kpi-label">Top Video Viral <span>🔥</span></div>
-        <div class="kpi-value" style="font-size: 24px; padding-top: 4px;">42.0K Views</div>
-        <div class="kpi-trend" style="color: #d094ff;">Combo điện lạnh (Collab KOC)</div>
-      </div>
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('tab-overview')">
+        <i class="fa-solid fa-chart-pie"></i> Tổng Quan Đa Kênh
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-tiktok')">
+        <i class="fa-brands fa-tiktok"></i> TikTok Shop Creators
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-shopee')">
+        <i class="fa-solid fa-bag-shopping"></i> Shopee Affiliate
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-products')">
+        <i class="fa-solid fa-cube"></i> Top Sản Phẩm Bán Chạy
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-report')">
+        <i class="fa-solid fa-file-lines"></i> Báo Cáo Phân Tích & Kế Hoạch
+      </button>
     </div>
 
-    <!-- Charts Row -->
-    <div class="charts-row">
-      <div class="chart-panel">
-        <div class="chart-header">
+    <!-- TAB 1: TỔNG QUAN ĐA KÊNH -->
+    <div id="tab-overview" class="tab-content active">
+      <!-- KPI Metric Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--card-accent: #3b82f6;">
+          <div class="kpi-header">
+            <span class="kpi-title">Tổng Doanh Thu Đa Kênh</span>
+            <div class="kpi-icon"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+          </div>
+          <div class="kpi-value" id="kpiGrandTotal">5.083.174.238 ₫</div>
+          <div class="kpi-subtext">
+            <span class="trend-badge trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +85.2%</span>
+            <span>Toàn hệ thống T1 - T9/2026</span>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="--card-accent: #06b6d4;">
+          <div class="kpi-header">
+            <span class="kpi-title">Doanh Thu TikTok Shop</span>
+            <div class="kpi-icon"><i class="fa-brands fa-tiktok"></i></div>
+          </div>
+          <div class="kpi-value" id="kpiTikTokTotal">4.344.799.748 ₫</div>
+          <div class="kpi-subtext">
+            <span>Chiếm 85.5% tổng doanh thu</span>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="--card-accent: #f59e0b;">
+          <div class="kpi-header">
+            <span class="kpi-title">Doanh Thu Shopee AMS</span>
+            <div class="kpi-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+          </div>
+          <div class="kpi-value" id="kpiShopeeTotal">738.374.490 ₫</div>
+          <div class="kpi-subtext">
+            <span class="trend-badge trend-up"><i class="fa-solid fa-arrow-up"></i> T9 tăng 192%</span>
+            <span>Chiến dịch Q3 (T8 - T9)</span>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="--card-accent: #10b981;">
+          <div class="kpi-header">
+            <span class="kpi-title">Tổng Sản Phẩm Bán Ra</span>
+            <div class="kpi-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+          </div>
+          <div class="kpi-value" id="kpiItemsSold">28.500+</div>
+          <div class="kpi-subtext">
+            <span>Hơn 700+ KOL ra đơn thành công</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="chart-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><i class="fa-solid fa-chart-line"></i> Biến Động Doanh Thu TikTok Shop Theo Tháng</div>
+              <div class="card-subtitle">Theo dõi GMV nhà sáng tạo và xu hướng tăng trưởng (T1 - T9/2026)</div>
+            </div>
+            <span class="tag tag-blue">Vĩ Mô Toàn Sàn</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="monthlyTrendChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Cơ Cấu Doanh Thu Định Dạng</div>
+              <div class="card-subtitle">Video vs LIVE vs Trang trưng bày</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="formatShareChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 10 KOLs Bar Chart & Macro Table -->
+      <div class="chart-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><i class="fa-solid fa-trophy"></i> Top 10 KOL Đóng Góp Doanh Thu Cao Nhất</div>
+              <div class="card-subtitle">Doanh số thực tế ghi nhận trên TikTok Shop & Shopee</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="topKolsBarChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Tỷ Lệ Chi Phí & Hiệu Quả</div>
+              <div class="card-subtitle">Chỉ số tài chính trọng yếu</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
+            <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div style="font-size: 12px; color: var(--text-muted);">TỶ LỆ HOA HỒNG TOÀN KỲ (COMMISSION RATE)</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--accent-emerald);">7.73% <span style="font-size: 12px; font-weight: 500; color: var(--text-muted);">(335.9M / 4.34B ₫)</span></div>
+              <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Rất an toàn, biên lợi nhuận ròng kim khí đảm bảo</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div style="font-size: 12px; color: var(--text-muted);">TỶ LỆ HOÀN HỦY TOÀN SÀN (REFUND RATE)</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--accent-cyan);">3.22% <span style="font-size: 12px; font-weight: 500; color: var(--text-muted);">(139.7M / 4.34B ₫)</span></div>
+              <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Thấp hơn nhiều mức bình quân 8-12% ngành TMĐT</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div style="font-size: 12px; color: var(--text-muted);">TỶ TRỌNG TOP 50 KOL TRÊN TỔNG DOANH SỐ</div>
+              <div style="font-size: 20px; font-weight: 800; color: var(--accent-amber);">81.5% <span style="font-size: 12px; font-weight: 500; color: var(--text-muted);">(2.94 tỷ ₫)</span></div>
+              <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">Tuân theo chặt chẽ quy luật tập trung Pareto 80/20</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Macro Table -->
+      <div class="card">
+        <div class="card-header">
           <div>
-            <div class="chart-title">Tăng Trưởng Lượt Xem & Tương Tác Theo Tháng</div>
-            <div class="chart-subtitle">So sánh nhịp độ phát triển từ Tháng 7 đến Tháng 9/2026</div>
+            <div class="card-title"><i class="fa-solid fa-table-list"></i> Bảng Thống Kê Vĩ Mô TikTok Shop Theo Chu Kỳ (T1 - T9/2026)</div>
+            <div class="card-subtitle">Dữ liệu nguồn chính thức trích xuất từ Transaction Analysis Core Metrics</div>
           </div>
         </div>
-        <div class="chart-wrapper">
-          <canvas id="monthlyTrendChart"></canvas>
+        <div class="table-responsive">
+          <table id="macroTable">
+            <thead>
+              <tr>
+                <th>Giai Đoạn</th>
+                <th>GMV Nhà Sáng Tạo</th>
+                <th>Món Bán Ra</th>
+                <th>Tiền Hoàn Hủy</th>
+                <th>AOV Đơn Hàng</th>
+                <th>Tỷ Lệ Ra Đơn (CTOR)</th>
+                <th>Số Video</th>
+                <th>Số Buổi LIVE</th>
+                <th>Hoa Hồng Ước Tính</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Generated via JS -->
+            </tbody>
+          </table>
         </div>
       </div>
+    </div>
 
-      <div class="chart-panel">
-        <div class="chart-header">
+    <!-- TAB 2: TIKTOK SHOP CREATORS -->
+    <div id="tab-tiktok" class="tab-content">
+      <div class="card">
+        <div class="card-header">
           <div>
-            <div class="chart-title">Cơ Cấu Tỷ Trọng Lượt Xem</div>
-            <div class="chart-subtitle">Phân bổ hiệu quả theo 5 nhóm nội dung</div>
+            <div class="card-title"><i class="fa-brands fa-tiktok"></i> Chi Tiết Hiệu Suất Từng KOL TikTok Shop</div>
+            <div class="card-subtitle">Xếp hạng theo doanh số, số lượng video, buổi live, tỷ lệ ra đơn và sản phẩm bán chạy</div>
           </div>
+          <span class="tag tag-emerald" id="tiktokCountBadge">150 Creators Hàng Đầu</span>
         </div>
-        <div class="chart-wrapper">
-          <canvas id="contentPillarChart"></canvas>
-        </div>
-      </div>
-    </div>
 
-    <!-- Top Videos Showcase -->
-    <h2 class="section-title">Nội Dung Đột Phá Hàng Đầu (Top Performers)</h2>
-    <div class="top-videos-grid">
-      <div class="top-video-card">
-        <span class="top-badge rank-1">🥇 TOP 1 VIRAL</span>
-        <div class="video-name">Combo điện lạnh (Collab KOC)</div>
-        <div class="video-meta">Ngày 08/09/2026 • 1m48s • Collab KOL/KOC</div>
-        <div class="video-stats">
-          <div class="video-stat-item">
-            <span class="video-stat-num" style="color: #00d2ff;">42,000</span>
-            <span class="video-stat-sub">Lượt xem</span>
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="tiktokSearchInput" placeholder="Tìm theo tên KOL, nick TikTok hoặc ngành hàng..." oninput="filterTikTokTable()">
           </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num" style="color: #ff6b00;">1,077</span>
-            <span class="video-stat-sub">Thích</span>
-          </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num" style="color: #00e676;">26</span>
-            <span class="video-stat-sub">Bình luận</span>
-          </div>
+          <select class="filter-select" id="tiktokMonthSelect" onchange="filterTikTokTable()">
+            <option value="all">Tất cả các tháng (T4 - T9)</option>
+            <option value="Tháng 9">Tháng 9/2026</option>
+            <option value="Tháng 8">Tháng 8/2026</option>
+            <option value="Tháng 7">Tháng 7/2026</option>
+            <option value="Tháng 6">Tháng 6/2026</option>
+            <option value="Tháng 5">Tháng 5/2026</option>
+            <option value="Tháng 4">Tháng 4/2026</option>
+          </select>
+          <select class="filter-select" id="tiktokSortSelect" onchange="filterTikTokTable()">
+            <option value="gmv">Sắp xếp: GMV cao nhất</option>
+            <option value="orders">Sắp xếp: Số đơn nhiều nhất</option>
+            <option value="videos">Sắp xếp: Số video nhiều nhất</option>
+            <option value="lives">Sắp xếp: Số live nhiều nhất</option>
+            <option value="views">Sắp xếp: Lượt xem nhiều nhất</option>
+            <option value="ctor">Sắp xếp: Tỷ lệ ra đơn (CTOR)</option>
+          </select>
         </div>
-      </div>
 
-      <div class="top-video-card">
-        <span class="top-badge rank-2">🥈 TOP 2 VIEWS</span>
-        <div class="video-name">Các loại kéo cắt cành (QC)</div>
-        <div class="video-meta">Ngày 11/08/2026 • 48s • Giới thiệu sản phẩm</div>
-        <div class="video-stats">
-          <div class="video-stat-item">
-            <span class="video-stat-num" style="color: #00d2ff;">12,000</span>
-            <span class="video-stat-sub">Lượt xem</span>
-          </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num">34</span>
-            <span class="video-stat-sub">Thích</span>
-          </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num">0</span>
-            <span class="video-stat-sub">Bình luận</span>
-          </div>
+        <div class="table-responsive">
+          <table id="tiktokTable">
+            <thead>
+              <tr>
+                <th>Hạng</th>
+                <th>Nhà Sáng Tạo / Kênh</th>
+                <th>Ngành Hàng / Chuyên Môn</th>
+                <th>Tổng GMV (₫)</th>
+                <th>GMV Video</th>
+                <th>GMV LIVE</th>
+                <th>Đơn Hàng</th>
+                <th>Video</th>
+                <th>Buổi LIVE</th>
+                <th>Tỷ Lệ Ra Đơn (CTOR)</th>
+                <th>Lượt Xem (Views)</th>
+                <th>AOV (₫)</th>
+                <th>Top Sản Phẩm Bán Chạy</th>
+              </tr>
+            </thead>
+            <tbody id="tiktokTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
         </div>
-      </div>
 
-      <div class="top-video-card">
-        <span class="top-badge rank-3">🥉 TOP 3 VIEWS</span>
-        <div class="video-name">Top 3 mẫu khò ga đáng mua</div>
-        <div class="video-meta">Ngày 09/07/2026 • 1m13s • Giới thiệu sản phẩm</div>
-        <div class="video-stats">
-          <div class="video-stat-item">
-            <span class="video-stat-num" style="color: #00d2ff;">7,369</span>
-            <span class="video-stat-sub">Lượt xem</span>
-          </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num">46</span>
-            <span class="video-stat-sub">Thích</span>
-          </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num">3</span>
-            <span class="video-stat-sub">Bình luận</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-video-card">
-        <span class="top-badge rank-other">⭐ TOP TƯƠNG TÁC CAO</span>
-        <div class="video-name">Thùng đồ nghề KHD4233</div>
-        <div class="video-meta">Ngày 26/09/2026 • 38s • Giới thiệu sản phẩm</div>
-        <div class="video-stats">
-          <div class="video-stat-item">
-            <span class="video-stat-num" style="color: #00d2ff;">4,967</span>
-            <span class="video-stat-sub">Lượt xem</span>
-          </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num">21</span>
-            <span class="video-stat-sub">Thích</span>
-          </div>
-          <div class="video-stat-item">
-            <span class="video-stat-num" style="color: #00e676;">7</span>
-            <span class="video-stat-sub">Bình luận</span>
-          </div>
+        <div class="pagination">
+          <span id="tiktokPaginationInfo">Hiển thị 1 - 25 trong 150 KOLs</span>
+          <div class="pagination-buttons" id="tiktokPaginationBtns"></div>
         </div>
       </div>
     </div>
 
-    <!-- Explorer & Filters -->
-    <h2 class="section-title">Khám Phá Dữ Liệu Chi Tiết (68 Video)</h2>
-    <div class="filters-bar">
-      <div class="filter-tabs" id="month-tabs">
-        <button class="filter-btn active" data-month="all">Tất Cả (68)</button>
-        <button class="filter-btn" data-month="7">Tháng 7 (25)</button>
-        <button class="filter-btn" data-month="8">Tháng 8 (22)</button>
-        <button class="filter-btn" data-month="9">Tháng 9 (21)</button>
-      </div>
-      <div>
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Tìm kiếm tên video, sản phẩm...">
+    <!-- TAB 3: SHOPEE AFFILIATE -->
+    <div id="tab-shopee" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-bag-shopping"></i> Hiệu Suất Tiếp Thị Liên Kết Shopee AMS (Tháng 8 & Tháng 9)</div>
+            <div class="card-subtitle">Chiến dịch trọng điểm tiếp thị liên kết đa sàn King Blue</div>
+          </div>
+          <span class="tag tag-amber" id="shopeeCountBadge">100 Đối Tác Hàng Đầu</span>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="shopeeSearchInput" placeholder="Tìm theo tên đối tác Shopee, mã tài khoản..." oninput="filterShopeeTable()">
+          </div>
+          <select class="filter-select" id="shopeeMonthSelect" onchange="filterShopeeTable()">
+            <option value="all">Tất cả tháng (T8 & T9)</option>
+            <option value="Tháng 9">Chỉ Tháng 9/2026</option>
+            <option value="Tháng 8">Chỉ Tháng 8/2026</option>
+          </select>
+          <select class="filter-select" id="shopeeSortSelect" onchange="filterShopeeTable()">
+            <option value="rev">Sắp xếp: Doanh thu cao nhất</option>
+            <option value="orders">Sắp xếp: Đơn hàng nhiều nhất</option>
+            <option value="clicks">Sắp xếp: Lượt nhấp nhiều nhất</option>
+            <option value="cvr">Sắp xếp: Tỷ lệ ra đơn (CVR)</option>
+            <option value="roi">Sắp xếp: ROI cao nhất</option>
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          <table id="shopeeTable">
+            <thead>
+              <tr>
+                <th>Hạng</th>
+                <th>Đối Tác / Tài Khoản</th>
+                <th>Doanh Thu Tổng (₫)</th>
+                <th>Doanh Thu T8</th>
+                <th>Doanh Thu T9</th>
+                <th>Đơn Hàng</th>
+                <th>Sản Phẩm Đã Bán</th>
+                <th>Lượt Nhấp (Clicks)</th>
+                <th>Tỷ Lệ Ra Đơn (CVR)</th>
+                <th>Hoa Hồng (₫)</th>
+                <th>ROI</th>
+                <th>Top Sản Phẩm Đẩy Mạnh</th>
+              </tr>
+            </thead>
+            <tbody id="shopeeTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <span id="shopeePaginationInfo">Hiển thị 1 - 25 trong 100 đối tác</span>
+          <div class="pagination-buttons" id="shopeePaginationBtns"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Data Table -->
-    <div class="table-panel">
-      <div class="table-responsive">
-        <table class="data-table" id="videoTable">
-          <thead>
-            <tr>
-              <th style="width: 50px;">STT</th>
-              <th>Ngày Đăng</th>
-              <th>Tên / Chủ Đề Video</th>
-              <th>Nhóm Nội Dung</th>
-              <th>Thời Lượng</th>
-              <th style="text-align: right;">Lượt Xem</th>
-              <th style="text-align: right;">Thích</th>
-              <th style="text-align: right;">Bình Luận</th>
-              <th style="text-align: center;">Tỷ Lệ ER</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            <!-- Rendered by JS -->
-          </tbody>
-        </table>
+    <!-- TAB 4: TOP SẢN PHẨM BÁN CHẠY -->
+    <div id="tab-products" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-crown"></i> Danh Mục Top Sản Phẩm Bán Chạy & Ma Trận KOL</div>
+            <div class="card-subtitle">Các dòng sản phẩm chiến lược mang lại doanh thu đột phá kèm các KOL hạt nhân</div>
+          </div>
+        </div>
+
+        <div class="product-grid">
+          <!-- Card 1 -->
+          <div class="product-card">
+            <span class="product-badge"><i class="fa-solid fa-fire"></i> Top 1 Doanh Thu</span>
+            <div class="product-title">Máy Mài Góc Pin K18MGS (18V)</div>
+            <div class="product-desc">
+              Động cơ không chổi than, 4 cấp tốc độ lên đến 9.000 vòng/phút. Tích hợp 2 tính năng an toàn bảo vệ: Chống lật cổ tay (Anti-Kickback) và Chống khởi động lại. Chân pin phổ thông, bảo hành chính hãng 16 tháng.
+            </div>
+            <div class="product-kols">
+              <h5>KOL Bán Chạy Hàng Đầu:</h5>
+              <div class="kol-tag-list">
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Nam Thợ Đụng</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Kiệt Cổ Đông</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Linh Ck</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Võ Trường ĐMX</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="product-card">
+            <span class="product-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border-color: rgba(16, 185, 129, 0.3);"><i class="fa-solid fa-chart-line"></i> Top 1 Số Lượng Đơn</span>
+            <div class="product-title">Đầu Siết Tôn Bi Giữ ST08X42V</div>
+            <div class="product-desc">
+              Tích hợp bi giữ chống rơi ốc độc quyền, giải quyết dứt điểm nỗi đau rớt ốc khi thợ trèo mái cao. Giá rẻ, tỷ lệ chuyển đổi thần tốc đạt tới 9.0% - 12.5%. Sản phẩm phễu hút khách mới cực mạnh.
+            </div>
+            <div class="product-kols">
+              <h5>KOL Bán Chạy Hàng Đầu:</h5>
+              <div class="kol-tag-list">
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Quốc Thịnh (3.400+ đơn)</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Nam Thợ Đụng</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Lê Huỳnh Tiến</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="product-card">
+            <span class="product-badge" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);"><i class="fa-solid fa-car"></i> Đột Phá Tiện Ích</span>
+            <div class="product-title">Bộ Kích Bình & Bơm Lốp Đa Năng K12000</div>
+            <div class="product-desc">
+              Dung lượng 12.000mAh, dòng khởi động mạnh mẽ kích nổ xe hơi chết ắc quy trong 3 giây. Bơm lốp tự ngắt thông minh, đèn pin cứu hộ. Bán chạy trên tệp tài xế, gara xe và gia đình.
+            </div>
+            <div class="product-kols">
+              <h5>KOL Bán Chạy Hàng Đầu:</h5>
+              <div class="kol-tag-list">
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Bình Điện Năng</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Hữu Hoài Thợ Điện</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Đoàn Phú Tài</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Review đồ dùng</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="product-card">
+            <span class="product-badge" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); border-color: rgba(139, 92, 246, 0.3);"><i class="fa-solid fa-snowflake"></i> Vua Ngách Điện Lạnh</span>
+            <div class="product-title">Bộ Loe Ống Đồng Lệch Tâm King Blue</div>
+            <div class="product-desc">
+              Gia công chính xác từ hợp kim cao cấp, tạo mép loe sắc nét không xì gas. Kèm dao cắt ống đồng bén ngọt. Là dụng cụ bắt buộc cho anh em thợ điện lạnh lắp đặt điều hòa.
+            </div>
+            <div class="product-kols">
+              <h5>KOL Bán Chạy Hàng Đầu:</h5>
+              <div class="kol-tag-list">
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Trung Lượng Điện Lạnh (293M)</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Trí Điện Lạnh</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Minh Nghĩa</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="product-card">
+            <span class="product-badge" style="background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border-color: rgba(244, 63, 94, 0.3);"><i class="fa-solid fa-faucet-drip"></i> AOV Khủng Nhất</span>
+            <div class="product-title">Máy Rửa Xe Áp Lực Cao KBA-I1500 (1500W)</div>
+            <div class="product-desc">
+              Động cơ từ (Induction motor) bền bỉ, công suất thật 1500W, áp lực 75 - 100 Bar. Chuẩn chống nước IPX5, bảo hành 12 tháng (1 đổi 1 trong 30 ngày). Đa năng rửa xe, xịt dàn lạnh điều hòa, vệ sinh xưởng.
+            </div>
+            <div class="product-kols">
+              <h5>KOL Bán Chạy Hàng Đầu:</h5>
+              <div class="kol-tag-list">
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Phạm Trấn Trí (AOV 1.77M)</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Kiệt Cổ Đông</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Thương Điện Máy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="product-card">
+            <span class="product-badge"><i class="fa-solid fa-bolt"></i> Siêu Tốc 8A</span>
+            <div class="product-title">Sạc Nhanh Siêu Tốc KM08AI (18V - 21V)</div>
+            <div class="product-desc">
+              Dòng sạc siêu tốc 8A, công suất 150W, sạc đầy pin 4.0Ah trong 35-40 phút. Quạt tản nhiệt chủ động, cảm biến nhiệt độ NTC, đầy pin tự ngắt và phát nhạc chuông báo. Đổi mới chính hãng 6 tháng.
+            </div>
+            <div class="product-kols">
+              <h5>KOL Bán Chạy Hàng Đầu:</h5>
+              <div class="kol-tag-list">
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Bình Điện Năng</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Nam Thợ Đụng</span>
+                <span class="kol-pill"><i class="fa-solid fa-user"></i> Kiều Thương</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Action Plan Q4 -->
-    <h2 class="section-title">Kế Hoạch Phân Bổ Nội Dung Đề Xuất (Tháng 11)</h2>
-    <div class="plan-grid">
-      <div class="plan-card">
-        <div class="plan-target">70%</div>
-        <div style="font-weight: 700; color: #fff; margin-bottom: 6px;">Giới Thiệu Sản Phẩm</div>
-        <div style="font-size: 13px; color: var(--text-muted);">17 Videos • Dự kiến 36.4k views • Trọng tâm dải máy pin K18MGS, K18QES gắn link giỏ hàng.</div>
+    <!-- TAB 5: BÁO CÁO CHI TIẾT & KẾ HOẠCH -->
+    <div id="tab-report" class="tab-content">
+      <div class="card report-content">
+        <h2>1. TỔNG QUAN ĐIỀU HÀNH & KẾT QUẢ KINH DOANH</h2>
+        <p>
+          Trong 9 tháng đầu năm 2026, chiến lược đẩy mạnh mạng lưới Nhà sáng tạo nội dung (KOL/KOC Affiliate) trên hai sàn thương mại điện tử <strong>TikTok Shop</strong> và <strong>Shopee</strong> đã mang về tổng doanh thu ấn tượng <strong>5.083.174.238 ₫</strong> cho thương hiệu dụng cụ kim khí <strong>KING BLUE</strong>.
+        </p>
+
+        <div class="report-highlight">
+          <strong>Điểm Nhấn Chiến Lược:</strong> Kênh tiếp thị liên kết không chỉ mang lại doanh số trực tiếp mà còn lan tỏa nhận diện thương hiệu King Blue đến hơn <strong>25 triệu lượt xem video tự nhiên</strong> trên cộng đồng thợ cơ khí, thợ điện lạnh, tài xế và người dùng DIY toàn quốc.
+        </div>
+
+        <h2>2. ĐÁNH GIÁ CƠ CẤU DOANH THU & TOP KOL ĐẦU TÀU</h2>
+        <p>
+          Doanh thu có mức độ tập trung cao theo đúng quy luật Pareto 80/20. Cụ thể, Top 50 KOL chiếm tới <strong>81.5%</strong> tổng doanh số. Hệ sinh thái ghi nhận 3 nhóm KOL chính:
+        </p>
+        <ul>
+          <li><strong>Nhóm Kỹ Thuật Chuyên Sâu (Điện Lạnh / Cơ Khí Lớn):</strong> Tiêu biểu là <em>Trung Lượng Điện Lạnh</em> (293.6M) và <em>Phạm Trấn Trí</em> (120.7M). Đặc điểm: Số đơn vừa phải nhưng AOV cực cao (từ 1.0M đến 1.77M ₫/đơn), chủ lực là máy rửa xe 1500W và combo loe ống đồng.</li>
+          <li><strong>Nhóm Toàn Diện (Đa Năng & Livestream Thường Xuyên):</strong> Tiêu biểu là <em>Nam Thợ Đụng</em> (279.3M đa kênh) và <em>Kiệt Cổ Đông</em> (147.6M). Đặc điểm: Hoạt động bền bỉ, kết hợp cả video viral và livestream tại xưởng thực tế.</li>
+          <li><strong>Nhóm Phễu Đơn Hàng Thần Tốc:</strong> Tiêu biểu là <em>Quốc Thịnh</em> (hơn 3.800 đơn hàng, tỷ lệ chuyển đổi 9.0% - 12.5%). Đẩy mạnh dòng đầu siết tôn bi giữ ST08X42V giá rẻ giúp gom hàng nghìn khách hàng mới vào tệp nhận diện King Blue.</li>
+        </ul>
+
+        <h2>3. KẾ HOẠCH HÀNH ĐỘNG CHO QUÝ 4 / 2026</h2>
+        <ul>
+          <li><strong>1. Ký hợp đồng hợp tác chiến lược Quý 4:</strong> Khóa chặt Top 5 KOC đầu tàu (Trung Lượng, Nam Thợ Đụng, Kiệt Cổ Đông, Bình Điện Năng, Quốc Thịnh) kèm chính sách thưởng bậc thang khi vượt mốc 100M/tháng.</li>
+          <li><strong>2. Nhân rộng mô hình "Sản phẩm mồi":</strong> Sử dụng đầu siết tôn bi giữ ST08X42V và mũi vít nam châm làm quà tặng hoặc sản phẩm kèm theo để kích cầu mua máy mài pin K18MGS và máy rửa xe KBA-I1500.</li>
+          <li><strong>3. Đẩy mạnh Shopee Siêu Sale 11.11 & 12.12:</strong> Hướng dẫn KOL kéo link Shopee trong các khung giờ vàng Flash Sale sàn để tận dụng voucher trợ giá 15% - 20%.</li>
+          <li><strong>4. Tối ưu định dạng Video ngắn:</strong> Áp dụng công thức 3s đầu giải quyết ngay nỗi đau kỹ thuật (rơi ốc trên mái, cháy động cơ chổi than, máy yếu xì gas) kết hợp chứng minh công suất thật trên vật liệu thực tế.</li>
+        </ul>
       </div>
-      <div class="plan-card">
-        <div class="plan-target" style="color: #ff6b00;">15%</div>
-        <div style="font-weight: 700; color: #fff; margin-bottom: 6px;">Review & Trải Nghiệm</div>
-        <div style="font-size: 13px; color: var(--text-muted);">4 Videos • Dự kiến 28.6k views • Test đè tải, so sánh máy pin vs máy điện, chứng minh lực bền.</div>
-      </div>
-      <div class="plan-card">
-        <div class="plan-target" style="color: #00e676;">10%</div>
-        <div style="font-weight: 700; color: #fff; margin-bottom: 6px;">Mẹo Nghề & Hướng Dẫn</div>
-        <div style="font-size: 13px; color: var(--text-muted);">2 Videos • Dự kiến 3.1k views • Hướng dẫn quy tắc an toàn mài cắt, bảo dưỡng kéo dài tuổi thọ.</div>
-      </div>
-      <div class="plan-card">
-        <div class="plan-target" style="color: #9d4edd;">5%</div>
-        <div style="font-weight: 700; color: #fff; margin-bottom: 6px;">Teaser Hàng Mới</div>
-        <div style="font-size: 13px; color: var(--text-muted);">1 Video • Dự kiến 1.0k views • Video motion dưới 15s thông báo sản phẩm mới về kho.</div>
+    </div>
+
+    <!-- Modal KOL Detail -->
+    <div class="modal-backdrop" id="kolModal" onclick="closeKolModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeKolModal()"><i class="fa-solid fa-xmark"></i></button>
+        <div id="modalBody">
+          <!-- Injected via JS -->
+        </div>
       </div>
     </div>
 
     <!-- Footer -->
-    <footer class="dash-footer">
-      <p>© 2026 King Blue Marketing Intelligence • Báo cáo tự động lưu trữ trên GitHub Pages</p>
+    <footer>
+      <p>© 2026 KING BLUE - Hệ Thống Báo Cáo Hiệu Suất Marketing & Bán Hàng Đa Kênh. Được biên soạn tự động và đồng bộ thời gian thực.</p>
     </footer>
   </div>
 
-  <!-- Interactive Logic -->
   <script>
-    // Full 68 Video Data Set
-    const videoData = [
-      // THANG 7 (25 videos)
-      { id: 1, month: 7, date: "01/07/2026", title: "Đầu siết tôn tích hợp bi giữ", category: "Giới thiệu sản phẩm", duration: "37s", views: 1239, likes: 14, comments: 0 },
-      { id: 2, month: 7, date: "02/07/2026", title: "Đầu siết tôn tích hợp bi giữ", category: "Giới thiệu sản phẩm", duration: "34s", views: 1641, likes: 9, comments: 0 },
-      { id: 3, month: 7, date: "03/07/2026", title: "Bộ sưu tập quạt cầm tay", category: "Giới thiệu sản phẩm", duration: "44s", views: 806, likes: 5, comments: 0 },
-      { id: 4, month: 7, date: "04/07/2026", title: "Đầu siết tôn ST08X42V", category: "Giới thiệu sản phẩm", duration: "36s", views: 1268, likes: 14, comments: 0 },
-      { id: 5, month: 7, date: "06/07/2026", title: "Kéo cắt góc nẹp điên KPQ-032", category: "Giới thiệu sản phẩm", duration: "25s", views: 2439, likes: 22, comments: 0 },
-      { id: 6, month: 7, date: "07/07/2026", title: "Quạt tích điện KB-CF01", category: "Giới thiệu sản phẩm", duration: "38s", views: 2801, likes: 12, comments: 0 },
-      { id: 7, month: 7, date: "09/07/2026", title: "Top 3 mẫu khò ga đáng mua", category: "Giới thiệu sản phẩm", duration: "1m13s", views: 7369, likes: 46, comments: 3 },
-      { id: 8, month: 7, date: "10/07/2026", title: "Quạt cầm tay tích hợp sò lạnh", category: "Giới thiệu sản phẩm", duration: "42s", views: 1477, likes: 19, comments: 1 },
-      { id: 9, month: 7, date: "11/07/2026", title: "Đầu siết tôn ST08X42V", category: "Review / trải nghiệm thực tế", duration: "43s", views: 2364, likes: 28, comments: 6 },
-      { id: 10, month: 7, date: "13/07/2026", title: "Quạt cầm tay tích hợp sò lạnh", category: "Review / trải nghiệm thực tế", duration: "41s", views: 1750, likes: 33, comments: 3 },
-      { id: 11, month: 7, date: "14/07/2026", title: "Quạt cầm tay tích hợp sò lạnh", category: "Giới thiệu sản phẩm", duration: "25s", views: 2480, likes: 5, comments: 0 },
-      { id: 12, month: 7, date: "15/07/2026", title: "Quạt mini KB-HS", category: "Giới thiệu sản phẩm", duration: "25s", views: 2118, likes: 3, comments: 0 },
-      { id: 13, month: 7, date: "16/07/2026", title: "Máy rung ốp lát gạch KM18-HR1", category: "Giới thiệu sản phẩm", duration: "43s", views: 2043, likes: 16, comments: 0 },
-      { id: 14, month: 7, date: "17/07/2026", title: "Bộ loe ống đồng", category: "Hướng dẫn sử dụng", duration: "29s", views: 3082, likes: 22, comments: 1 },
-      { id: 15, month: 7, date: "18/07/2026", title: "Quạt mini KB-HS", category: "Giới thiệu sản phẩm", duration: "29s", views: 1118, likes: 4, comments: 0 },
-      { id: 16, month: 7, date: "21/07/2026", title: "Công cụ hỗ trợ lắp ráp ống đồng", category: "Giới thiệu sản phẩm", duration: "55s", views: 4479, likes: 12, comments: 0 },
-      { id: 17, month: 7, date: "22/07/2026", title: "Quạt cầm tay sò lạnh", category: "Giới thiệu sản phẩm", duration: "40s", views: 1188, likes: 12, comments: 0 },
-      { id: 18, month: 7, date: "23/07/2026", title: "Máy mài góc K18MGS", category: "Giới thiệu sản phẩm", duration: "43s", views: 1099, likes: 7, comments: 0 },
-      { id: 19, month: 7, date: "24/07/2026", title: "Quạt tích điện KB-CF01", category: "Giới thiệu sản phẩm", duration: "28s", views: 564, likes: 5, comments: 0 },
-      { id: 20, month: 7, date: "25/07/2026", title: "Top những máy khoan đáng mua", category: "Giới thiệu sản phẩm", duration: "1m07s", views: 2308, likes: 28, comments: 0 },
-      { id: 21, month: 7, date: "27/07/2026", title: "Máy cân bằng KB-05XS", category: "Giới thiệu sản phẩm", duration: "33s", views: 1474, likes: 15, comments: 0 },
-      { id: 22, month: 7, date: "28/07/2026", title: "Tính năng máy mài góc", category: "Giới thiệu sản phẩm", duration: "41s", views: 1091, likes: 13, comments: 0 },
-      { id: 23, month: 7, date: "29/07/2026", title: "Bộ mũi khoan đa năng", category: "Giới thiệu sản phẩm", duration: "44s", views: 849, likes: 7, comments: 1 },
-      { id: 24, month: 7, date: "30/07/2026", title: "Tuốt nơ vít 2 đầu", category: "Giới thiệu sản phẩm", duration: "34s", views: 2083, likes: 12, comments: 0 },
-      { id: 25, month: 7, date: "31/07/2026", title: "Quạt cầm tay mini KB-HS", category: "Giới thiệu sản phẩm", duration: "19s", views: 569, likes: 5, comments: 0 },
+    // Global State
+    let currentTheme = 'dark';
+    let tiktokCurrentPage = 1;
+    let shopeeCurrentPage = 1;
+    const pageSize = 25;
+    
+    // Fallback Data if dashboard_data.js not loaded
+    const db = window.DASHBOARD_DATA || {
+      Summary: {
+        TotalTikTokMacroGMV: 4344799748,
+        TotalShopeeRevenue: 738374490,
+        GrandTotalOmnichannel: 5083174238,
+        TotalItemsTikTok: 25125,
+        TotalOrdersShopee: 2800,
+        ActiveKOLCountTikTok: 707,
+        ActiveKOLCountShopee: 462
+      },
+      TikTokMacro: [],
+      TikTokTopCreators: [],
+      ShopeeTopPartners: []
+    };
 
-      // THANG 8 (22 videos)
-      { id: 26, month: 8, date: "01/08/2026", title: "Ảnh banner máy cân bằng KB-05XS", category: "Banner sản phẩm", duration: "-", views: 1149, likes: 4, comments: 0 },
-      { id: 27, month: 8, date: "04/08/2026", title: "Kìm tuốt dây điện KND205", category: "Giới thiệu sản phẩm", duration: "34s", views: 951, likes: 8, comments: 0 },
-      { id: 28, month: 8, date: "06/08/2026", title: "Máy bắn vít K18VFS", category: "Giới thiệu sản phẩm", duration: "29s", views: 1326, likes: 11, comments: 0 },
-      { id: 29, month: 8, date: "07/08/2026", title: "Bộ mũi khoan đa năng KLJ-015", category: "Giới thiệu sản phẩm", duration: "27s", views: 1338, likes: 6, comments: 0 },
-      { id: 30, month: 8, date: "08/08/2026", title: "Dao cắt trái cây QC1", category: "Giới thiệu sản phẩm", duration: "26s", views: 7363, likes: 18, comments: 0 },
-      { id: 31, month: 8, date: "10/08/2026", title: "Dao cắt ống KPC-032", category: "Giới thiệu sản phẩm", duration: "29s", views: 2705, likes: 19, comments: 0 },
-      { id: 32, month: 8, date: "11/08/2026", title: "Các loại kéo cắt cành", category: "Giới thiệu sản phẩm", duration: "48s", views: 12000, likes: 34, comments: 0 },
-      { id: 33, month: 8, date: "12/08/2026", title: "Kéo cắt cành QC4", category: "Giới thiệu sản phẩm", duration: "26s", views: 1254, likes: 7, comments: 0 },
-      { id: 34, month: 8, date: "13/08/2026", title: "Kéo cắt cành QC2", category: "Giới thiệu sản phẩm", duration: "23s", views: 1804, likes: 7, comments: 0 },
-      { id: 35, month: 8, date: "14/08/2026", title: "Máy hút chân không về hàng", category: "Giới thiệu sản phẩm", duration: "37s", views: 2505, likes: 6, comments: 0 },
-      { id: 36, month: 8, date: "15/08/2026", title: "Máy bắn vít cấp trượt KB16VA2", category: "Giới thiệu sản phẩm", duration: "29s", views: 1485, likes: 10, comments: 2 },
-      { id: 37, month: 8, date: "17/08/2026", title: "Hít kính điện tử", category: "Giới thiệu sản phẩm", duration: "33s", views: 2834, likes: 25, comments: 0 },
-      { id: 38, month: 8, date: "18/08/2026", title: "Hít kính điện tử", category: "Giới thiệu sản phẩm", duration: "42s", views: 4766, likes: 38, comments: 1 },
-      { id: 39, month: 8, date: "19/08/2026", title: "Đèn pin siêu sáng", category: "Giới thiệu sản phẩm", duration: "27s", views: 544, likes: 3, comments: 0 },
-      { id: 40, month: 8, date: "22/08/2026", title: "Kéo cắt cành QC1", category: "Giới thiệu sản phẩm", duration: "32s", views: 2493, likes: 8, comments: 0 },
-      { id: 41, month: 8, date: "24/08/2026", title: "Hít kính điện tử", category: "Giới thiệu sản phẩm", duration: "1m14s", views: 3163, likes: 32, comments: 2 },
-      { id: 42, month: 8, date: "25/08/2026", title: "Tổng hợp các mẫu hít kính hot", category: "Giới thiệu sản phẩm", duration: "1m20s", views: 1294, likes: 7, comments: 0 },
-      { id: 43, month: 8, date: "26/08/2026", title: "Máy thổi phản lực", category: "Review / trải nghiệm thực tế", duration: "17s", views: 1101, likes: 13, comments: 0 },
-      { id: 44, month: 8, date: "27/08/2026", title: "Máy khoan bê tông", category: "Giới thiệu sản phẩm", duration: "35s", views: 746, likes: 6, comments: 0 },
-      { id: 45, month: 8, date: "28/08/2026", title: "Trọn bộ hàng hot", category: "Banner sản phẩm", duration: "-", views: 1282, likes: 8, comments: 0 },
-      { id: 46, month: 8, date: "29/08/2026", title: "Máy thổi phản lực", category: "Hướng dẫn sử dụng", duration: "47s", views: 1739, likes: 16, comments: 0 },
-      { id: 47, month: 8, date: "31/08/2026", title: "Hít kính điện tử", category: "Video / Collab KOL/KOC", duration: "1m09s", views: 982, likes: 6, comments: 1 },
-
-      // THANG 9 (21 videos)
-      { id: 48, month: 9, date: "03/09/2026", title: "Test Máy thổi phản lực", category: "Video / Collab KOL/KOC", duration: "1m37s", views: 1384, likes: 13, comments: 0 },
-      { id: 49, month: 9, date: "04/09/2026", title: "Test Máy khoan bê tông", category: "Video / Collab KOL/KOC", duration: "1m30s", views: 1194, likes: 18, comments: 0 },
-      { id: 50, month: 9, date: "05/09/2026", title: "Test máy siết bulon", category: "Video / Collab KOL/KOC", duration: "1m59s", views: 1173, likes: 10, comments: 0 },
-      { id: 51, month: 9, date: "07/09/2026", title: "Test thực tế máy siết bulon", category: "Video / Collab KOL/KOC", duration: "1m24s", views: 2222, likes: 52, comments: 0 },
-      { id: 52, month: 9, date: "08/09/2026", title: "Combo điện lạnh", category: "Video / Collab KOL/KOC", duration: "1m48s", views: 42000, likes: 1077, comments: 26 },
-      { id: 53, month: 9, date: "09/09/2026", title: "Máy rửa xe tiêu âm KBA-US1500", category: "Giới thiệu sản phẩm", duration: "50s", views: 2980, likes: 30, comments: 1 },
-      { id: 54, month: 9, date: "10/09/2026", title: "Test Máy khoan bê tông", category: "Video / Collab KOL/KOC", duration: "51s", views: 1106, likes: 16, comments: 2 },
-      { id: 55, month: 9, date: "12/09/2026", title: "Tổng hợp máy rửa xe", category: "Banner sản phẩm", duration: "-", views: 598, likes: 5, comments: 0 },
-      { id: 56, month: 9, date: "14/09/2026", title: "Máy rửa xe KBA-UL1200", category: "Giới thiệu sản phẩm", duration: "39s", views: 3065, likes: 19, comments: 0 },
-      { id: 57, month: 9, date: "15/09/2026", title: "Máy thổi phản lực", category: "Hướng dẫn sử dụng", duration: "58s", views: 595, likes: 7, comments: 1 },
-      { id: 58, month: 9, date: "16/09/2026", title: "Bộ 3 máy khoan 3 chức năng", category: "Giới thiệu sản phẩm", duration: "1m34s", views: 893, likes: 12, comments: 0 },
-      { id: 59, month: 9, date: "17/09/2026", title: "Máy rửa xe áp lực KBA-UL1200", category: "Giới thiệu sản phẩm", duration: "36s", views: 1851, likes: 10, comments: 0 },
-      { id: 60, month: 9, date: "18/09/2026", title: "Máy rửa xe KBA-I1500", category: "Giới thiệu sản phẩm", duration: "45s", views: 553, likes: 5, comments: 1 },
-      { id: 61, month: 9, date: "19/09/2026", title: "Máy rửa xe tiêu âm KBA-US1500", category: "Giới thiệu sản phẩm", duration: "30s", views: 892, likes: 15, comments: 3 },
-      { id: 62, month: 9, date: "21/09/2026", title: "Máy thổi phản lực", category: "Giới thiệu sản phẩm", duration: "34s", views: 641, likes: 8, comments: 0 },
-      { id: 63, month: 9, date: "22/09/2026", title: "Bơm lốp kích bình", category: "Giới thiệu sản phẩm", duration: "42s", views: 470, likes: 3, comments: 0 },
-      { id: 64, month: 9, date: "23/09/2026", title: "Máy rửa xe tiêu âm KBA-US1500", category: "Giới thiệu sản phẩm", duration: "29s", views: 733, likes: 15, comments: 0 },
-      { id: 65, month: 9, date: "25/09/2026", title: "Máy rửa xe KBA-I1500", category: "Giới thiệu sản phẩm", duration: "35s", views: 608, likes: 12, comments: 0 },
-      { id: 66, month: 9, date: "26/09/2026", title: "Thùng đồ nghề KHD4233", category: "Giới thiệu sản phẩm", duration: "38s", views: 4967, likes: 21, comments: 7 },
-      { id: 67, month: 9, date: "28/09/2026", title: "Bơm lốp kích bình", category: "Giới thiệu sản phẩm", duration: "45s", views: 542, likes: 4, comments: 0 },
-      { id: 68, month: 9, date: "29/09/2026", title: "Tính năng của máy thổi phản lực", category: "Hướng dẫn sử dụng", duration: "52s", views: 772, likes: 7, comments: 0 }
-    ];
-
-    // Helper functions
-    function getBadgeClass(cat) {
-      if (cat.includes("Collab") || cat.includes("KOC")) return "badge-cat-koc";
-      if (cat.includes("Review")) return "badge-cat-review";
-      if (cat.includes("Hướng dẫn")) return "badge-cat-hdsd";
-      if (cat.includes("Banner")) return "badge-cat-banner";
-      return "badge-cat-sp";
+    // Format currency
+    function formatMoney(amount) {
+      if (!amount || isNaN(amount)) return '0 ₫';
+      return new Intl.NumberFormat('vi-VN').format(Math.round(amount)) + ' ₫';
     }
 
-    // Render Table
-    let currentMonth = "all";
-    let searchQuery = "";
-
-    function renderTable() {
-      const tbody = document.getElementById("tableBody");
-      tbody.innerHTML = "";
-
-      const filtered = videoData.filter(v => {
-        const matchMonth = (currentMonth === "all") || (v.month.toString() === currentMonth);
-        const matchSearch = v.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            v.category.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchMonth && matchSearch;
-      });
-
-      filtered.forEach((v, index) => {
-        const er = v.views > 0 ? (((v.likes + v.comments) / v.views) * 100).toFixed(2) + "%" : "0%";
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td style="color: var(--text-sub);">${index + 1}</td>
-          <td style="font-weight: 500;">${v.date}</td>
-          <td style="font-weight: 700; color: #fff;">${v.title}</td>
-          <td><span class="badge-category ${getBadgeClass(v.category)}">${v.category}</span></td>
-          <td style="color: var(--text-muted);">${v.duration}</td>
-          <td style="text-align: right; font-weight: 700; color: #00d2ff;">${v.views.toLocaleString()}</td>
-          <td style="text-align: right; font-weight: 600;">${v.likes.toLocaleString()}</td>
-          <td style="text-align: right; font-weight: 600;">${v.comments.toLocaleString()}</td>
-          <td style="text-align: center; font-weight: 700; color: var(--accent-green);">${er}</td>
-        `;
-        tbody.appendChild(row);
-      });
+    function formatNumber(num) {
+      if (!num || isNaN(num)) return '0';
+      return new Intl.NumberFormat('vi-VN').format(num);
     }
 
-    // Filter Listeners
-    document.querySelectorAll("#month-tabs .filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll("#month-tabs .filter-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentMonth = btn.getAttribute("data-month");
-        renderTable();
-      });
-    });
-
-    document.getElementById("searchInput").addEventListener("input", (e) => {
-      searchQuery = e.target.value.trim();
-      renderTable();
-    });
-
-    // Initialize Charts
-    function initCharts() {
-      // 1. Monthly Trend Chart
-      const ctxTrend = document.getElementById("monthlyTrendChart").getContext("2d");
-      new Chart(ctxTrend, {
-        type: "bar",
-        data: {
-          labels: ["Tháng 7", "Tháng 8", "Tháng 9"],
-          datasets: [
-            {
-              label: "Lượt Xem (Views)",
-              data: [49699, 54824, 69239],
-              backgroundColor: "rgba(0, 136, 255, 0.75)",
-              borderColor: "#0088ff",
-              borderWidth: 1.5,
-              borderRadius: 6,
-              yAxisID: "y"
-            },
-            {
-              label: "Lượt Thích (Likes)",
-              data: [368, 292, 1359],
-              type: "line",
-              borderColor: "#ff6b00",
-              backgroundColor: "#ff6b00",
-              borderWidth: 3,
-              pointRadius: 5,
-              pointBackgroundColor: "#ff6b00",
-              yAxisID: "y1"
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: { color: "#8ea1c1", font: { family: "Plus Jakarta Sans", size: 12 } }
-            }
-          },
-          scales: {
-            x: {
-              grid: { color: "rgba(255,255,255,0.05)" },
-              ticks: { color: "#8ea1c1" }
-            },
-            y: {
-              position: "left",
-              grid: { color: "rgba(255,255,255,0.05)" },
-              ticks: { color: "#8ea1c1" },
-              title: { display: true, text: "Lượt Xem", color: "#8ea1c1" }
-            },
-            y1: {
-              position: "right",
-              grid: { drawOnChartArea: false },
-              ticks: { color: "#ff6b00" },
-              title: { display: true, text: "Lượt Thích", color: "#ff6b00" }
-            }
-          }
-        }
-      });
-
-      // 2. Content Pillar Doughnut
-      const ctxPillar = document.getElementById("contentPillarChart").getContext("2d");
-      new Chart(ctxPillar, {
-        type: "doughnut",
-        data: {
-          labels: [
-            "Giới thiệu SP (62.9%)",
-            "Collab KOC (28.8%)",
-            "Hướng dẫn (3.6%)",
-            "Review (3.0%)",
-            "Banner (1.7%)"
-          ],
-          datasets: [{
-            data: [109269, 50061, 6188, 5215, 3029],
-            backgroundColor: [
-              "#0088ff",
-              "#9d4edd",
-              "#00e676",
-              "#ff6b00",
-              "#6c757d"
-            ],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: "bottom",
-              labels: { 
-                color: "#8ea1c1", 
-                boxWidth: 12, 
-                padding: 12,
-                font: { family: "Plus Jakarta Sans", size: 11 } 
-              }
-            }
-          },
-          cutout: "68%"
-        }
-      });
+    // Toggle Theme
+    function toggleTheme() {
+      const body = document.body;
+      const btn = document.getElementById('themeToggleBtn');
+      if (currentTheme === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        currentTheme = 'light';
+        btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+      } else {
+        body.removeAttribute('data-theme');
+        currentTheme = 'dark';
+        btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+      }
+      updateChartThemes();
     }
 
-    // Init Page
-    window.addEventListener("DOMContentLoaded", () => {
-      renderTable();
+    // Switch Tabs
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      const activeContent = document.getElementById(tabId);
+      if (activeContent) activeContent.classList.add('active');
+      
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMacroTable();
+      renderTikTokTable();
+      renderShopeeTable();
       initCharts();
     });
+
+    // Render Macro Table
+    function renderMacroTable() {
+      const tbody = document.querySelector('#macroTable tbody');
+      if (!tbody || !db.TikTokMacro) return;
+      tbody.innerHTML = '';
+
+      db.TikTokMacro.forEach(row => {
+        let monthName = row.Period;
+        if (row.Period.includes('0112')) monthName = 'Tháng 1/2026';
+        else if (row.Period.includes('0201')) monthName = 'Tháng 2/2026';
+        else if (row.Period.includes('0301')) monthName = 'Tháng 3/2026';
+        else if (row.Period.includes('0412')) monthName = 'Tháng 4/2026';
+        else if (row.Period.includes('0501')) monthName = 'Tháng 5/2026';
+        else if (row.Period.includes('0601')) monthName = 'Tháng 6/2026';
+        else if (row.Period.includes('0701')) monthName = 'Tháng 7/2026';
+        else if (row.Period.includes('0801')) monthName = 'Tháng 8/2026';
+        else if (row.Period.includes('0901')) monthName = 'Tháng 9/2026';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${monthName}</strong></td>
+          <td class="numeric" style="color: var(--primary);">${formatMoney(row.GMV)}</td>
+          <td class="numeric">${formatNumber(row.ItemsSold)}</td>
+          <td class="numeric" style="color: var(--accent-rose);">${formatMoney(row.RefundAmount)}</td>
+          <td class="numeric">${formatMoney(row.AOV)}</td>
+          <td><span class="tag tag-emerald">${row.CTOR}%</span></td>
+          <td class="numeric">${formatNumber(row.Videos)}</td>
+          <td class="numeric">${formatNumber(row.Lives)}</td>
+          <td class="numeric" style="color: var(--accent-amber);">${formatMoney(row.EstimatedCommission)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Filter and Render TikTok Table
+    function filterTikTokTable() {
+      tiktokCurrentPage = 1;
+      renderTikTokTable();
+    }
+
+    function renderTikTokTable() {
+      const tbody = document.getElementById('tiktokTableBody');
+      if (!tbody || !db.TikTokTopCreators) return;
+      
+      const search = (document.getElementById('tiktokSearchInput')?.value || '').toLowerCase().trim();
+      const monthFilter = document.getElementById('tiktokMonthSelect')?.value || 'all';
+      const sortBy = document.getElementById('tiktokSortSelect')?.value || 'gmv';
+
+      let list = [...db.TikTokTopCreators];
+
+      // Filter by search
+      if (search) {
+        list = list.filter(c => 
+          (c.Handle || '').toLowerCase().includes(search) || 
+          (c.DisplayName || '').toLowerCase().includes(search) ||
+          (c.Niche || '').toLowerCase().includes(search)
+        );
+      }
+
+      // Filter by month
+      if (monthFilter !== 'all') {
+        list = list.filter(c => c.MonthlyStats && c.MonthlyStats[monthFilter] && c.MonthlyStats[monthFilter].GMV > 0);
+      }
+
+      // Sort
+      list.sort((a, b) => {
+        let valA = a.TotalGMV, valB = b.TotalGMV;
+        if (monthFilter !== 'all') {
+          valA = a.MonthlyStats?.[monthFilter]?.GMV || 0;
+          valB = b.MonthlyStats?.[monthFilter]?.GMV || 0;
+        }
+
+        if (sortBy === 'orders') {
+          valA = monthFilter === 'all' ? a.TotalOrders : (a.MonthlyStats?.[monthFilter]?.Orders || 0);
+          valB = monthFilter === 'all' ? b.TotalOrders : (b.MonthlyStats?.[monthFilter]?.Orders || 0);
+        } else if (sortBy === 'videos') {
+          valA = monthFilter === 'all' ? a.TotalVideos : (a.MonthlyStats?.[monthFilter]?.Videos || 0);
+          valB = monthFilter === 'all' ? b.TotalVideos : (b.MonthlyStats?.[monthFilter]?.Videos || 0);
+        } else if (sortBy === 'lives') {
+          valA = monthFilter === 'all' ? a.TotalLives : (a.MonthlyStats?.[monthFilter]?.Lives || 0);
+          valB = monthFilter === 'all' ? b.TotalLives : (b.MonthlyStats?.[monthFilter]?.Lives || 0);
+        } else if (sortBy === 'views') {
+          valA = monthFilter === 'all' ? a.TotalViews : (a.MonthlyStats?.[monthFilter]?.Views || 0);
+          valB = monthFilter === 'all' ? b.TotalViews : (b.MonthlyStats?.[monthFilter]?.Views || 0);
+        } else if (sortBy === 'ctor') {
+          valA = monthFilter === 'all' ? (a.TotalOrders / (a.TotalViews || 1)) : (a.MonthlyStats?.[monthFilter]?.CTOR || 0);
+          valB = monthFilter === 'all' ? (b.TotalOrders / (b.TotalViews || 1)) : (b.MonthlyStats?.[monthFilter]?.CTOR || 0);
+        }
+        return valB - valA;
+      });
+
+      // Pagination
+      const totalItems = list.length;
+      const totalPages = Math.ceil(totalItems / pageSize) || 1;
+      const startIdx = (tiktokCurrentPage - 1) * pageSize;
+      const pagedItems = list.slice(startIdx, startIdx + pageSize);
+
+      tbody.innerHTML = '';
+      pagedItems.forEach((c, idx) => {
+        const globalRank = startIdx + idx + 1;
+        let rankClass = 'rank-other';
+        if (globalRank === 1) rankClass = 'rank-1';
+        else if (globalRank === 2) rankClass = 'rank-2';
+        else if (globalRank === 3) rankClass = 'rank-3';
+
+        const gmv = monthFilter === 'all' ? c.TotalGMV : (c.MonthlyStats?.[monthFilter]?.GMV || 0);
+        const vidGmv = monthFilter === 'all' ? c.TotalVideoGMV : (c.MonthlyStats?.[monthFilter]?.VideoGMV || 0);
+        const liveGmv = monthFilter === 'all' ? c.TotalLiveGMV : (c.MonthlyStats?.[monthFilter]?.LiveGMV || 0);
+        const orders = monthFilter === 'all' ? c.TotalOrders : (c.MonthlyStats?.[monthFilter]?.Orders || 0);
+        const videos = monthFilter === 'all' ? c.TotalVideos : (c.MonthlyStats?.[monthFilter]?.Videos || 0);
+        const lives = monthFilter === 'all' ? c.TotalLives : (c.MonthlyStats?.[monthFilter]?.Lives || 0);
+        const views = monthFilter === 'all' ? c.TotalViews : (c.MonthlyStats?.[monthFilter]?.Views || 0);
+        const ctor = monthFilter === 'all' ? (c.MonthlyStats?.["Tháng 7"]?.CTOR || c.MonthlyStats?.["Tháng 9"]?.CTOR || 1.25) : (c.MonthlyStats?.[monthFilter]?.CTOR || 0);
+        const aov = orders > 0 ? (gmv / orders) : (c.AvgAOV || 0);
+
+        const initial = (c.DisplayName || c.Handle || 'K').charAt(0).toUpperCase();
+        const topProds = c.TopProducts ? c.TopProducts.slice(0, 2).join(', ') : 'Dụng cụ King Blue';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="badge-rank ${rankClass}">${globalRank}</span></td>
+          <td>
+            <div class="kol-profile" onclick="openKolModal('${c.Handle}')">
+              <div class="kol-avatar">${initial}</div>
+              <div class="kol-names">
+                <h4>${c.DisplayName || c.Handle}</h4>
+                <p>@${c.Handle}</p>
+              </div>
+            </div>
+          </td>
+          <td><span class="tag tag-blue">${c.Niche || 'Kim khí & Thợ'}</span></td>
+          <td class="numeric" style="color: var(--primary); font-weight: 700;">${formatMoney(gmv)}</td>
+          <td class="numeric" style="color: var(--accent-cyan);">${formatMoney(vidGmv)}</td>
+          <td class="numeric" style="color: var(--accent-purple);">${formatMoney(liveGmv)}</td>
+          <td class="numeric">${formatNumber(orders)}</td>
+          <td class="numeric">${videos}</td>
+          <td class="numeric">${lives}</td>
+          <td><span class="tag tag-emerald">${ctor}%</span></td>
+          <td class="numeric">${formatNumber(views)}</td>
+          <td class="numeric">${formatMoney(aov)}</td>
+          <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--text-muted);">${topProds}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Update Pagination UI
+      const info = document.getElementById('tiktokPaginationInfo');
+      if (info) info.innerText = `Hiển thị ${totalItems > 0 ? startIdx + 1 : 0} - ${Math.min(startIdx + pageSize, totalItems)} trong ${totalItems} nhà sáng tạo`;
+
+      renderPaginationButtons('tiktokPaginationBtns', totalPages, tiktokCurrentPage, (page) => {
+        tiktokCurrentPage = page;
+        renderTikTokTable();
+      });
+    }
+
+    // Filter and Render Shopee Table
+    function filterShopeeTable() {
+      shopeeCurrentPage = 1;
+      renderShopeeTable();
+    }
+
+    function renderShopeeTable() {
+      const tbody = document.getElementById('shopeeTableBody');
+      if (!tbody || !db.ShopeeTopPartners) return;
+
+      const search = (document.getElementById('shopeeSearchInput')?.value || '').toLowerCase().trim();
+      const monthFilter = document.getElementById('shopeeMonthSelect')?.value || 'all';
+      const sortBy = document.getElementById('shopeeSortSelect')?.value || 'rev';
+
+      let list = [...db.ShopeeTopPartners];
+
+      // Filter search
+      if (search) {
+        list = list.filter(s => 
+          (s.PartnerName || '').toLowerCase().includes(search) || 
+          (s.Account || '').toLowerCase().includes(search)
+        );
+      }
+
+      // Filter month
+      if (monthFilter !== 'all') {
+        list = list.filter(s => s.Months && s.Months[monthFilter] && s.Months[monthFilter].Revenue > 0);
+      }
+
+      // Sort
+      list.sort((a, b) => {
+        let valA = a.TotalRevenue, valB = b.TotalRevenue;
+        if (monthFilter !== 'all') {
+          valA = a.Months?.[monthFilter]?.Revenue || 0;
+          valB = b.Months?.[monthFilter]?.Revenue || 0;
+        }
+
+        if (sortBy === 'orders') {
+          valA = monthFilter === 'all' ? a.TotalOrders : (a.Months?.[monthFilter]?.Orders || 0);
+          valB = monthFilter === 'all' ? b.TotalOrders : (b.Months?.[monthFilter]?.Orders || 0);
+        } else if (sortBy === 'clicks') {
+          valA = monthFilter === 'all' ? a.TotalClicks : (a.Months?.[monthFilter]?.Clicks || 0);
+          valB = monthFilter === 'all' ? b.TotalClicks : (b.Months?.[monthFilter]?.Clicks || 0);
+        } else if (sortBy === 'cvr') {
+          valA = monthFilter === 'all' ? a.ConvRate : (a.Months?.[monthFilter]?.ConvRate || 0);
+          valB = monthFilter === 'all' ? b.ConvRate : (b.Months?.[monthFilter]?.ConvRate || 0);
+        } else if (sortBy === 'roi') {
+          valA = a.MeanROI || 0;
+          valB = b.MeanROI || 0;
+        }
+        return valB - valA;
+      });
+
+      const totalItems = list.length;
+      const totalPages = Math.ceil(totalItems / pageSize) || 1;
+      const startIdx = (shopeeCurrentPage - 1) * pageSize;
+      const pagedItems = list.slice(startIdx, startIdx + pageSize);
+
+      tbody.innerHTML = '';
+      pagedItems.forEach((s, idx) => {
+        const globalRank = startIdx + idx + 1;
+        let rankClass = 'rank-other';
+        if (globalRank === 1) rankClass = 'rank-1';
+        else if (globalRank === 2) rankClass = 'rank-2';
+        else if (globalRank === 3) rankClass = 'rank-3';
+
+        const totalRev = monthFilter === 'all' ? s.TotalRevenue : (s.Months?.[monthFilter]?.Revenue || 0);
+        const t8Rev = s.Months?.["Tháng 8"]?.Revenue || 0;
+        const t9Rev = s.Months?.["Tháng 9"]?.Revenue || 0;
+        const orders = monthFilter === 'all' ? s.TotalOrders : (s.Months?.[monthFilter]?.Orders || 0);
+        const items = monthFilter === 'all' ? s.TotalItemsSold : (s.Months?.[monthFilter]?.ItemsSold || 0);
+        const clicks = monthFilter === 'all' ? s.TotalClicks : (s.Months?.[monthFilter]?.Clicks || 0);
+        const cvr = monthFilter === 'all' ? s.ConvRate : (s.Months?.[monthFilter]?.ConvRate || 0);
+        const comm = monthFilter === 'all' ? s.TotalCommission : (s.Months?.[monthFilter]?.Commission || 0);
+        const roi = s.MeanROI || 10;
+        const topProds = s.TopProducts ? s.TopProducts.slice(0, 2).join(', ') : 'Dụng cụ King Blue';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="badge-rank ${rankClass}">${globalRank}</span></td>
+          <td>
+            <div class="kol-names">
+              <h4>${s.PartnerName || s.Account}</h4>
+              <p>${s.Account}</p>
+            </div>
+          </td>
+          <td class="numeric" style="color: var(--accent-amber); font-weight: 700;">${formatMoney(totalRev)}</td>
+          <td class="numeric">${formatMoney(t8Rev)}</td>
+          <td class="numeric" style="color: var(--accent-emerald);">${formatMoney(t9Rev)}</td>
+          <td class="numeric">${formatNumber(orders)}</td>
+          <td class="numeric">${formatNumber(items)}</td>
+          <td class="numeric">${formatNumber(clicks)}</td>
+          <td><span class="tag tag-emerald">${cvr}%</span></td>
+          <td class="numeric">${formatMoney(comm)}</td>
+          <td><span class="tag tag-purple">${roi}x</span></td>
+          <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--text-muted);">${topProds}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const info = document.getElementById('shopeePaginationInfo');
+      if (info) info.innerText = `Hiển thị ${totalItems > 0 ? startIdx + 1 : 0} - ${Math.min(startIdx + pageSize, totalItems)} trong ${totalItems} đối tác`;
+
+      renderPaginationButtons('shopeePaginationBtns', totalPages, shopeeCurrentPage, (page) => {
+        shopeeCurrentPage = page;
+        renderShopeeTable();
+      });
+    }
+
+    // Helper: Pagination Buttons
+    function renderPaginationButtons(containerId, totalPages, currentPage, onPageClick) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      if (totalPages <= 1) return;
+
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'page-btn';
+      prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => onPageClick(currentPage - 1);
+      container.appendChild(prevBtn);
+
+      for (let p = 1; p <= Math.min(totalPages, 5); p++) {
+        const btn = document.createElement('button');
+        btn.className = `page-btn ${p === currentPage ? 'active' : ''}`;
+        btn.innerText = p;
+        btn.onclick = () => onPageClick(p);
+        container.appendChild(btn);
+      }
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'page-btn';
+      nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => onPageClick(currentPage + 1);
+      container.appendChild(nextBtn);
+    }
+
+    // Modal Details
+    function openKolModal(handle) {
+      const c = db.TikTokTopCreators?.find(item => item.Handle === handle);
+      if (!c) return;
+
+      const modal = document.getElementById('kolModal');
+      const body = document.getElementById('modalBody');
+
+      const monthlyList = ['Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9'];
+      let monthRows = '';
+      monthlyList.forEach(m => {
+        const st = c.MonthlyStats?.[m];
+        if (st) {
+          monthRows += `
+            <tr>
+              <td><strong>${m}</strong></td>
+              <td class="numeric" style="color: var(--primary);">${formatMoney(st.GMV)}</td>
+              <td class="numeric">${formatMoney(st.VideoGMV)}</td>
+              <td class="numeric">${formatMoney(st.LiveGMV)}</td>
+              <td class="numeric">${formatNumber(st.Orders)}</td>
+              <td><span class="tag tag-emerald">${st.CTOR}%</span></td>
+              <td class="numeric">${st.Videos}</td>
+              <td class="numeric">${st.Lives}</td>
+              <td class="numeric">${formatNumber(st.Views)}</td>
+            </tr>
+          `;
+        }
+      });
+
+      const prods = (c.TopProducts || ['Máy mài pin K18MGS', 'Đầu siết tôn ST08X42V']).map(p => `<li>${p}</li>`).join('');
+
+      body.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+          <div class="kol-avatar" style="width: 56px; height: 56px; font-size: 20px;">${(c.DisplayName || c.Handle).charAt(0)}</div>
+          <div>
+            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 4px;">${c.DisplayName || c.Handle}</h2>
+            <p style="color: var(--text-muted); font-size: 14px;">TikTok: <span style="font-family: monospace; color: var(--primary);">@${c.Handle}</span> | Ngành hàng: <span class="tag tag-blue">${c.Niche || 'Kim khí & Kỹ thuật'}</span></p>
+          </div>
+        </div>
+
+        <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
+          <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Tổng Doanh Thu (T4 - T9)</div>
+            <div style="font-size: 18px; font-weight: 800; color: var(--primary); margin-top: 4px;">${formatMoney(c.TotalGMV)}</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Tổng Đơn Hàng</div>
+            <div style="font-size: 18px; font-weight: 800; color: var(--accent-emerald); margin-top: 4px;">${formatNumber(c.TotalOrders)} đơn</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Lượt Xem Video</div>
+            <div style="font-size: 18px; font-weight: 800; color: var(--accent-purple); margin-top: 4px;">${formatNumber(c.TotalViews)}</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px; background: rgba(59, 130, 246, 0.08); padding: 16px; border-radius: var(--radius-sm); border-left: 4px solid var(--primary);">
+          <h4 style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase;"><i class="fa-solid fa-lightbulb"></i> Góc Nhìn Sáng Tạo Chiến Thắng (Winning Angle):</h4>
+          <p style="font-size: 13.5px; color: var(--text-main); line-height: 1.5;">${c.WinningAngle || 'Video review gắn link sản phẩm kết hợp kịch bản thực chiến'}</p>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;"><i class="fa-solid fa-cube"></i> Top Sản Phẩm Bán Chạy Của KOL:</h4>
+          <ul style="margin-left: 20px; font-size: 13.5px; color: var(--text-main); line-height: 1.6;">
+            ${prods}
+          </ul>
+        </div>
+
+        <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;"><i class="fa-solid fa-chart-simple"></i> Biến Động Chỉ Số Theo Từng Tháng (T4 - T9/2026):</h4>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Tháng</th>
+                <th>GMV (₫)</th>
+                <th>GMV Video</th>
+                <th>GMV LIVE</th>
+                <th>Đơn</th>
+                <th>CTOR</th>
+                <th>Video</th>
+                <th>LIVE</th>
+                <th>Lượt Xem</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${monthRows}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      modal.classList.add('active');
+    }
+
+    function closeKolModal(event) {
+      if (event && event.target !== document.getElementById('kolModal') && !event.target.closest('.modal-close')) return;
+      document.getElementById('kolModal').classList.remove('active');
+    }
+
+    // Export CSV
+    function exportDataToCSV() {
+      let csv = 'Hang,KOL,Handle,NenTang,DoanhThu,DonHang,SoVideo,SoLive,CTOR,Views\n';
+      db.TikTokTopCreators?.forEach((c, idx) => {
+        csv += `${idx + 1},"${c.DisplayName || c.Handle}","${c.Handle}",TikTok Shop,${c.TotalGMV},${c.TotalOrders},${c.TotalVideos},${c.TotalLives},${c.MonthlyStats?.["Tháng 7"]?.CTOR || 1.25}%,${c.TotalViews}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Bao_Cao_KOL_KingBlue_2026.csv';
+      a.click();
+    }
+
+    // Chart.js Setup
+    let monthlyTrendChart, formatShareChart, topKolsBarChart;
+
+    function initCharts() {
+      const textColor = currentTheme === 'dark' ? '#9ca3af' : '#475569';
+      const gridColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
+
+      // 1. Monthly Trend Chart
+      const ctxTrend = document.getElementById('monthlyTrendChart')?.getContext('2d');
+      if (ctxTrend && db.TikTokMacro) {
+        const labels = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9'];
+        const dataGMV = db.TikTokMacro.map(m => m.GMV / 1000000); // In Millions
+
+        monthlyTrendChart = new Chart(ctxTrend, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'GMV TikTok (Triệu ₫)',
+              data: dataGMV,
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.15)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: '#3b82f6',
+              pointRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: {
+                grid: { color: gridColor },
+                ticks: { color: textColor, callback: val => val + 'M' }
+              },
+              x: {
+                grid: { color: gridColor },
+                ticks: { color: textColor }
+              }
+            }
+          }
+        });
+      }
+
+      // 2. Format Share Doughnut
+      const ctxFormat = document.getElementById('formatShareChart')?.getContext('2d');
+      if (ctxFormat) {
+        formatShareChart = new Chart(ctxFormat, {
+          type: 'doughnut',
+          data: {
+            labels: ['Video Liên Kết', 'Buổi LIVE', 'Trang Trưng Bày'],
+            datasets: [{
+              data: [74.5, 18.2, 7.3],
+              backgroundColor: ['#3b82f6', '#8b5cf6', '#06b6d4'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { color: textColor, boxWidth: 12, padding: 15 }
+              }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+
+      // 3. Top KOLs Horizontal Bar
+      const ctxTopKols = document.getElementById('topKolsBarChart')?.getContext('2d');
+      if (ctxTopKols && db.TikTokTopCreators) {
+        const top10 = db.TikTokTopCreators.slice(0, 10);
+        const kolLabels = top10.map(k => (k.DisplayName || k.Handle).split(' ')[0] + ' ' + (k.DisplayName || k.Handle).split(' ')[1] || k.Handle);
+        const kolGMV = top10.map(k => Math.round(k.TotalGMV / 1000000));
+
+        topKolsBarChart = new Chart(ctxTopKols, {
+          type: 'bar',
+          data: {
+            labels: kolLabels,
+            datasets: [{
+              label: 'Tổng GMV (Triệu ₫)',
+              data: kolGMV,
+              backgroundColor: '#3b82f6',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              x: {
+                grid: { color: gridColor },
+                ticks: { color: textColor, callback: val => val + 'M' }
+              },
+              y: {
+                grid: { display: false },
+                ticks: { color: textColor }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    function updateChartThemes() {
+      if (!monthlyTrendChart) return;
+      const textColor = currentTheme === 'dark' ? '#9ca3af' : '#475569';
+      const gridColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)';
+
+      [monthlyTrendChart, topKolsBarChart].forEach(chart => {
+        if (chart) {
+          chart.options.scales.x.ticks.color = textColor;
+          chart.options.scales.x.grid.color = gridColor;
+          chart.options.scales.y.ticks.color = textColor;
+          chart.options.scales.y.grid.color = gridColor;
+          chart.update();
+        }
+      });
+
+      if (formatShareChart) {
+        formatShareChart.options.plugins.legend.labels.color = textColor;
+        formatShareChart.update();
+      }
+    }
   </script>
 </body>
 </html>
